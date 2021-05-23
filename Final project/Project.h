@@ -9,7 +9,7 @@
 typedef nx_struct my_msg {
  	nx_uint8_t node_id;
 } my_msg_t;
-
+//coconut
 #define REQ 1
 #define RESP 2 
 
