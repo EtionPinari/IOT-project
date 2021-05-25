@@ -8,7 +8,7 @@
 #include "Project.h"
 
 
-configuration sendAckAppC {}
+configuration ProjectAppC {}
 
 implementation {
 
@@ -28,20 +28,12 @@ implementation {
 /****** INTERFACES *****/
   //Boot interface
   App.Boot -> MainC.Boot;
-
   App.Leds -> LedsC;
-  /****** Wire the other interfaces down here *****/
-  //Send and Receive interfaces
-  //Radio Control
-  //Interfaces to access package fields
-  //Timer interface
-  //Fake Sensor read
   App.Receive -> AMReceiverC;
   App.AMSend -> AMSenderC;
   App.SplitControl -> ActiveMessageC;
   App.timer -> Timer0;
   App.Packet -> AMSenderC;
-  App.PacketAcknowledgements -> ActiveMessageC;
 
 }
 

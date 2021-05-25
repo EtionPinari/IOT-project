@@ -34,7 +34,6 @@ module ProjectC @safe() {
 	// Message received contains in msg_rec[0][x] the node_id and in msg_rec[1][x] the counter of how many messages it received in the past few seconds.(for any x)
   uint8_t message_received[2][10];
   uint8_t latest_nodes[10];
-  uint8_t node_id;
   message_t packet;
 
   void sendReq();
@@ -51,13 +50,12 @@ module ProjectC @safe() {
 	  if (sendMessage == NULL) {
 		return;
 	  }
-	  sendMessage->msg_type = REQ;
-	  sendMessage->msg_counter = counter;
-	  sendMessage->value = 0;
-	  counter = counter + 1 ;
+	  sendMessage->node_id = TOS_NODE_ID;
 
 	  
-	  if(call AMSend.send(2, &packet,sizeof(my_msg_t)) == SUCCESS){
+	  if(call AMSend.send(AM_BROADCAST_ADDR, &packet,sizeof(my_msg_t)) == SUCCESS){
+	  
+	  //debug to show that we are sending a message
 
   	} else {
 
@@ -79,8 +77,8 @@ module ProjectC @safe() {
  	void resetNodes(){
  		uint8_t index = 0;
  		while(index<10){
- 		latest_nodes[index] = -1;
- 		index = index + 1;
+	 		latest_nodes[index] = -1;
+	 		index = index + 1;
  		}
  	}  
 
@@ -88,36 +86,28 @@ module ProjectC @safe() {
 
   //***************** Boot interface ********************//
   event void Boot.booted() {
-	dbg("boot","Application booted.\n");
-	dbg("boot","Application booted on node %u.\n", TOS_NODE_ID);
+
   	call SplitControl.start();
+    call timer.startPeriodic( 500 );
   }
 
   //***************** SplitControl interface ********************//
   event void SplitControl.startDone(error_t err){
-    /* Fill it ... */
+     /* Fill it ... */
     if(err == SUCCESS) {
-    	dbg("radio", "Radio on!\n");
-	if (TOS_NODE_ID == 1){
-           // send messages every 1000 ms
-           call timer.startPeriodic( 1000 );
-    	}
+	// dbg for success
     } else {
-	//dbg for error
-	dbg("radio", "Something went wrong with the start of one node");
+	// dbg for error
 	call SplitControl.start();
     }
   }
   
-  event void SplitControl.stopDone(error_t err){
-    /* Fill it ... */
-    // Here we define the req send back.
-  }
+  event void SplitControl.stopDone(error_t err){}
 
   //***************** MilliTimer interface ********************//
   event void timer.fired() {
 	// send a message in broadcast with your node_id
-	
+	sendReq();
 	// check if we received consecutive messages from the same nodes in the past 500 milliseconds
 	checkReceivedNodes(); 
 	// reset latest nodes to all -1s
@@ -129,9 +119,9 @@ module ProjectC @safe() {
   event void AMSend.sendDone(message_t* buf,error_t err) {
 
 	 if (&packet == buf && err == SUCCESS) {
-
-
+	// debug for success
  	} else {
+    // dbg for error
     }
   }
 
@@ -156,6 +146,11 @@ module ProjectC @safe() {
 				latest_nodes[index] = mess->node_id;
 				if(message_received[1][index] == 10){
 				//send a message to node red through the socket (idk how)
+				//Turn on LEDs so we can see it in cooja.
+				
+				call Leds.led0On();
+				call Leds.led1On();
+				call Leds.led2On();
 				}
 				//finish computation
 				return buf;
