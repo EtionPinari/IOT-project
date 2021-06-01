@@ -138,7 +138,7 @@ module ProjectC @safe() {
   void didReceiveTen(){
     bool risk = FALSE;
     if(counter1>=10){
-      printf("You were too close to node %u for more than 5 seconds", mem1 );
+      printf("Node #%u close to node #%u \n", TOS_NODE_ID ,mem1 );
       printfflush();
       mem1=0;
       prev1=0;
@@ -146,7 +146,7 @@ module ProjectC @safe() {
       risk = TRUE;
     }
     if(counter2>=10){
-      printf("You were too close to node %u for more than 5 seconds", mem1 );
+      printf("Node #%u close to node #%u \n", TOS_NODE_ID ,mem2 );
       printfflush();
       mem2=0;
       prev2=0;
@@ -154,7 +154,7 @@ module ProjectC @safe() {
       risk = TRUE;
     }
     if(counter3>=10){
-      printf("You were too close to node %u for more than 5 seconds", mem1 );
+      printf("Node #%u close to node #%u \n", TOS_NODE_ID ,mem3 );
       printfflush();
       mem3=0;
       prev3=0;
@@ -162,7 +162,7 @@ module ProjectC @safe() {
       risk = TRUE;
     }
     if(counter4>=10){
-      printf("You were too close to node %u for more than 5 seconds", mem1 );
+      printf("Node #%u close to node #%u \n", TOS_NODE_ID ,mem4);
       printfflush();
       mem4=0;
       prev4=0;
@@ -170,7 +170,7 @@ module ProjectC @safe() {
       risk = TRUE;
     }
     if(counter5>=10){
-      printf("You were too close to node %u for more than 5 seconds", mem1 );
+      printf("Node #%u close to node #%u \n", TOS_NODE_ID ,mem5 );
       printfflush();
       mem5=0;
       prev5=0;
@@ -269,8 +269,6 @@ module ProjectC @safe() {
         prev1 = rec_node;
         counter1 = counter1 + 1;
         fin = TRUE;
-        printf("Increased counter1 with node id %u", rec_node );
-        printfflush();
       } else if(mem2 == rec_node){
         prev2 = rec_node;
         counter2 = counter2 + 1;
